@@ -1,6 +1,5 @@
 const allEpisodes = getAllEpisodes();
 function setup() {
-  // allEpisodes = getAllEpisodes();
   makePageForEpisodes(allEpisodes);
 }
 
@@ -10,8 +9,11 @@ function makePageForEpisodes(episodeList) {
   const episodesDiv = document.createElement("div");
   episodesDiv.classList = "flex-section";
 
-  rootElem.innerHTML = `Got ${episodeList.length} episode(s) (visit&nbsp;<a href="https://tvmaze.com/"
-   target="_blank" style="text-decoration:none; color:darkred">TVMaze.com</a>&nbsp;for&nbsp;more)`;
+  rootElem.innerHTML = `<input type="text" id="search" placeholder="Search..."> Showing&nbsp;
+  <span id="total">${episodeList.length}/${episodeList.length}</span>&nbsp;episode(s) <span>(visit&nbsp;
+    <a href="https://tvmaze.com/" target="_blank" style="text-decoration:none; color:darkred">
+      TVMaze.com
+    </a>&nbsp;for&nbsp;more)</span>`;
   // for every episode in allEpisodes list
   allEpisodes.forEach((episode) => {
     // declare new variables and assign to each a new html element that is applicable
@@ -44,6 +46,29 @@ function makePageForEpisodes(episodeList) {
   });
   // finally add episodesDiv to rootElem, i.e. the parent div element
   rootElem.appendChild(episodesDiv);
+  document.getElementById("search").addEventListener("input", searchEpisodes);
 }
 
 window.onload = setup;
+
+function searchEpisodes(e) {
+  const keyword = e.target.value.toLowerCase(); //
+  const listedEpisodes = Array.from(document.querySelectorAll(".flex-div"));
+  listedEpisodes.forEach((episode) => {
+    const heading = episode.querySelector("h4").textContent.toLowerCase();
+    const summary = episode.querySelector("div").textContent.toLowerCase();
+    // if (keyword !== "") {
+    if (!(heading.includes(keyword) || summary.includes(keyword))) {
+      episode.classList.add("none");
+    } else {
+      if (episode.classList.toString().includes("none")) {
+        episode.classList.remove("none");
+      }
+    }
+    const removedEpisodes = document.querySelectorAll(".flex-section .none")
+      .length;
+    document.getElementById("total").textContent = `${
+      listedEpisodes.length - removedEpisodes
+    }/${listedEpisodes.length}`;
+  });
+}
