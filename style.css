@@ -1,7 +1,11 @@
+/*
+* General 
+*/
 body {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   background-color: #999;
 }
+
 div,
 h1,
 h2,
@@ -13,6 +17,18 @@ img {
   padding: 0px;
 }
 
+.flex {
+  display: flex;
+}
+
+.none {
+  display: none;
+}
+
+/* 
+* Element Styling
+*/
+
 #root {
   /* color: red; */
   text-align: center;
@@ -22,8 +38,7 @@ select {
   width: 15em;
 }
 
-.flex-section {
-  display: flex;
+.episodes {
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: top;
@@ -32,8 +47,7 @@ select {
   margin-top: 30px;
 }
 
-.flex-div {
-  display: flex;
+.thumbnail {
   flex-flow: column nowrap;
   align-items: center;
   margin-bottom: 1.25rem;
@@ -70,8 +84,4 @@ h4:hover {
 img {
   max-width: 100%;
   margin: 0.5em;
-}
-
-.none {
-  display: none;
 }
