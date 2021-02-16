@@ -18,6 +18,10 @@ img {
   text-align: center;
 }
 
+select {
+  width: 15em;
+}
+
 .flex-section {
   display: flex;
   flex-flow: row wrap;
