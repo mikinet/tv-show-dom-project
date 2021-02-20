@@ -1,7 +1,13 @@
 let displayedEpisodes = []; // episodes that are being displayed on the site page
 function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
+  getAllEpisodes("https://api.tvmaze.com/shows/82/episodes");
+}
+
+function getAllEpisodes(tvShowUrl) {
+  fetch(tvShowUrl)
+    .then((response) => response.json())
+    .then((data) => makePageForEpisodes(data))
+    .catch((error) => console.log(error.message));
 }
 
 function makePageForEpisodes(episodeList) {
@@ -172,12 +178,13 @@ function controlSearch(event) {
         icon.classList.add("fa-search");
         button.classList.remove("grey");
         button.classList.add("blue");
+        input.value = "";
         input.hidden = true;
       }
       displayedEpisodes.forEach((episode) => {
         if (episode.style.display === "none") {
           episode.style.display = "initial";
-        } 
+        }
       });
       updateDisplayInfo();
       break;
