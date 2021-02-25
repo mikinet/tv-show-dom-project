@@ -8,6 +8,8 @@ form,
 select,
 input,
 button,
+ul,
+li,
 h1,
 h2,
 h3,
@@ -58,18 +60,18 @@ body {
 }
 
 p.error {
-  margin-top:40vh;
+  margin-top: 40vh;
   text-align: center;
-  font-size:1.2rem;
+  font-size: 1.2rem;
 }
 
-p.error span.red{
-  color:red;
+p.error span.red {
+  color: red;
   font-size: 2em;
 }
 
 p.info,
-.title {
+h4.title {
   text-align: center;
 }
 
@@ -82,14 +84,6 @@ p.result {
   color: teal;
 }
 
-form.flex-form {
-  display: grid;
-  grid-template-columns: 90% 10%;
-  grid-template-rows: auto auto auto;
-  justify-content: center;
-  width: 100%;
-}
-
 #shows,
 #episodes,
 #txt-search,
@@ -98,7 +92,118 @@ form.flex-form {
   font-size: 1em;
 }
 
-#shows, #episodes {
+.thumbnail {
+  align-items: start;
+  margin-bottom: 1em;
+  padding-bottom: 0.5em;
+  border-radius: 0.5125em;
+  border-bottom-left-radius: 0em;
+  border: thin solid #ddd;
+}
+
+.summary {
+  font-size: 0.9em;
+  color: #999;
+  padding: 5px 10px 0px;
+  text-align: justify;
+}
+
+/* 
+* Shows
+*/
+form.shows {
+  display: grid;
+  grid-template-columns: 90% 10%;
+  grid-template-rows: auto auto auto;
+  justify-content: center;
+  width: 100%;
+}
+
+#shows {
+  grid-column: 1/3;
+  margin-bottom: 0.5em;
+  width: 100%;
+}
+
+div.show {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-rows: auto;
+}
+
+div.show .title {
+  grid-column: 1/3;
+}
+
+h4.link {
+  color: darkred;
+}
+
+h4.link:hover {
+  cursor: pointer;
+}
+
+div.show > img {
+  display: block;
+  grid-column: 1/2;
+  grid-row: 2/3;
+}
+
+div.show div:last-child {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  padding: 0.3em;
+}
+
+div.show div:last-child ul {
+  border: 2px solid #ddd;
+  list-style: none;
+  padding: 0.3em;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+div.show ul li {
+  margin-bottom: 0.3em;
+}
+
+span.bold {
+  font-weight: bold;
+}
+
+div.show .summary {
+  grid-column: 1/3;
+  grid-row: 3/4;
+  align-self: start;
+}
+
+/* 
+* Episodes
+*/
+form.episodes {
+  display: grid;
+  grid-template-columns: 90% 10%;
+  grid-template-rows: repeat(4, auto);
+  justify-content: center;
+  width: 100%;
+}
+
+#btn-shows {
+  grid-column: 1 / 3;
+  margin-bottom: 0.5em;
+  width: 5em;
+  margin-bottom: 1em;
+  padding: 0.1em;
+  border: 2px solid black;
+  border-radius: 0.3em;
+  transform-style: preserve-3d;
+  background-color: azure;
+  font-size: 1em;
+  color: darkred;
+  text-align: center;
+}
+
+#episodes {
   grid-column: 1 / 3;
   margin-bottom: 0.5em;
   width: 100%;
@@ -135,26 +240,20 @@ form.flex-form {
   color: red;
 }
 
-.episodes {
+div.all-episodes {
   display: grid;
   grid-template-columns: 1fr;
   width: 100%;
   margin: 0 auto;
 }
 
-.thumbnail {
+div.episode {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(3, auto);
-  align-items: start;
-  margin-bottom: 1em;
-  padding-bottom: 0.5em;
-  border-radius: 0.5125em;
-  border-bottom-left-radius: 0em;
-  border: thin solid #ddd;
 }
 
-.title {
+h4.title {
   padding: 0.75rem;
   background-color: teal;
   border-bottom: thin solid #eee;
@@ -163,13 +262,6 @@ form.flex-form {
 
 .thumbnail * {
   width: 100%;
-}
-
-.summary {
-  font-size: 0.9em;
-  color: #999;
-  padding: 5px 10px 0px;
-  text-align: justify;
 }
 
 /*
@@ -181,22 +273,56 @@ form.flex-form {
     grid-template-columns: 92% 8%;
   }
 
-  .thumbnail {
+  /* 
+  * Episodes
+  */
+
+  div.episode {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
   }
 
-  .title {
+  div.episode .title {
     grid-column: 1 / 3;
     grid-row: 1 / 2;
   }
 
-  img {
+  div.episode img {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
   }
 
-  .summary {
+  div.episode .summary {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+}
+
+@media screen and (min-width: 585px) {
+  /* 
+  * Shows
+  */
+  div.show {
+    margin: inherit auto;
+    grid-template-rows: 1fr 30% 70%;
+  }
+
+  div.show .title {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+  }
+
+  div.show img {
+    grid-column: 1 / 2;
+    grid-row: 2 / 4;
+  }
+
+  div.show .summary {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+  }
+
+  div.show div:last-child {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
   }
@@ -211,11 +337,22 @@ form.flex-form {
     grid-template-columns: 95% 5%;
   }
 
-  .episodes {
-    grid-template-columns: repeat(2, 50%);
+  /* 
+  * Shows
+  */
+  div.show {
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr 35% 65%;
   }
 
-  .thumbnail {
+  /* 
+  * Episodes
+  */
+  div.all-episodes {
+    grid-template-columns: 50% 50%;
+  }
+
+  div.episode {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -225,7 +362,45 @@ form.flex-form {
 }
 
 @media screen and (min-width: 1025px) {
-  .episodes {
+  /* 
+  * Shows
+  */
+  div.show {
+    grid-template-columns: 15% 60% 25%;
+    width: 100%;
+  }
+
+  div.show .title {
+    grid-column: 1/4;
+    grid-row: 1/2;
+  }
+
+  div.show img,
+  div.show .summary,
+  div.show div:last-child {
+    grid-row: 2/3;
+  }
+
+  div.show img {
+    grid-column: 1/2;
+  }
+
+  div.show .summary {
+    grid-column: 2/3;
+  }
+
+  div.show div:last-child {
+    grid-column: 3/4;
+    width: 80%;
+    justify-self: end;
+    padding-right: 1.5em;
+  }
+
+  div.show div:last-child ul {
+    padding: 1em;
+  }
+
+  div.all-episodes {
     grid-template-columns: repeat(3, 33.33%);
   }
 
