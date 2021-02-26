@@ -231,9 +231,7 @@ function createEventListeners(id) {
       .addEventListener("input", selectEpisode);
   }
   document.getElementById("shows").addEventListener("input", selectShow);
-  document
-    .getElementById("txt-search")
-    .addEventListener("input", searchEpisodes);
+  document.getElementById("txt-search").addEventListener("input", search);
   document
     .getElementById("btn-search")
     .addEventListener("click", resetSearchBox);
@@ -271,14 +269,13 @@ function resetSearchBox(e) {
 }
 
 // a function to manage searching of episode(s), given keyword(s)
-function searchEpisodes(e) {
+function search(e) {
   performAction("search", e);
   updateDisplayInfo();
 }
 
 // a function to manage selection of a tv show from list
 function selectShow(e) {
-  // console.log(e);
   if (e.target.id === "shows") {
     const selectedShow = document.getElementById(e.target.id).selectedOptions[0]
       .id;
@@ -288,7 +285,6 @@ function selectShow(e) {
     // update the number of episodes being displayed
     updateDisplayInfo();
   } else {
-    // console.log(e.target.id);
     getAllEpisodes(e.target.id);
   }
   controlSearch(e);
@@ -304,37 +300,85 @@ function selectEpisode(e) {
 
 // this function performs different actions (e.g. search episode, select episode)
 function performAction(action, event) {
-  const allThumbnails = Array.from(document.querySelectorAll(".thumbnail"));
-  let result = false; // whether or not episode meets the criteria
+  const allThumbnails = Array.from(document.querySelectorAll(".thumbnail")); // all show/episode thumbnails
+  const showSelector = document.getElementById("shows");
+  const input = document.getElementById("txt-search");
+  const isShowsPage = !document.getElementById("episodes"); // determine what page is being displayed
+  let showsList = Array.from(showSelector.children); // a variable representing a list of shows
+  let displayedShows = null; // an array that tracks and lists show thumbnails being displayed
 
-  if (action === "search") {
-    const keyword = event.target.value;
-    for (let i = 0; i < allThumbnails.length; i++) {
-      const thumbnail = allThumbnails[i];
+  // remove the "All shows" option from the show selector (*applied only to the "shows page")
+  if (isShowsPage && action === "search" && showSelector[0].value === "") {
+    showSelector.children[0].remove();
+    showsList = showsList.splice(1);
+  }
+  // this code below generally applies to both the "shows page" as well as "episodes page"
+  for (let i = 0; i < allThumbnails.length; i++) {
+    const thumbnail = allThumbnails[i];
+    let result = false; // whether or not show/episode meets the criteria
+    let showSelectorOption = null; // a variable (a select option) only applicable to the "shows page"
+    if (action === "search") {
+      if (isShowsPage) {
+        showSelectorOption = showSelector[i];
+      }
       const title = thumbnail.querySelector(".title").textContent.toLowerCase(); // episode title (lowercase)
       const summary = thumbnail
         .querySelector(".summary")
-        .textContent.toLowerCase(); // episode synopsis (lowercase)
+        .textContent.toLowerCase(); // show/episode synopsis (lowercase)
+      const keyword = event.target.value;
       result = title.includes(keyword) || summary.includes(keyword);
-      // show/hide the episode
+      // show/hide the show/episode
       showHideThumbnail(thumbnail, result);
+      if (isShowsPage) {
+        showHideThumbnail(showSelectorOption, result);
+      }
+    } else {
+      if (event.target.value !== "") {
+        const title = event.target.value;
+        result = thumbnail.querySelector(".title").textContent === title;
+        // show/hide the show/episode
+        showHideThumbnail(thumbnail, result);
+      }
     }
-  } else if (action === "select" && event.target.value !== "") {
-    for (let i = 0; i < allThumbnails.length; i++) {
-      const thumbnail = allThumbnails[i];
-      const title = event.target.value;
-      result = thumbnail.querySelector(".title").textContent === title;
-      // show/hide the episode
-      showHideThumbnail(thumbnail, result);
+  }
+  // update the show selector (*applied only to the "shows page")
+  if (isShowsPage) {
+    if (input.value === "") {
+      // recreate and insert the default option to the show selector
+      const option = document.createElement("option");
+      option.innerHTML = `<option value="">All shows</option>`;
+      showSelector.prepend(option);
+      // update selector display value
+      showSelector.selectedIndex = 0;
+    }
+    // if the search box is not empty
+    else {
+      // update displayedShows as the number of thumbnails being displayed changes
+      displayedShows = allThumbnails.filter(
+        (show) => show.style.display !== "none"
+      );
+      // update selector display value (it's going to be the title of the first thumbnail displayed)
+      // - but first, find out the position of the thumbnail in the whole collection, i.e. index
+      for (let i = 0; i < showsList.length; i++) {
+        show = showsList[i];
+        // make sure there's a thumbnail being displayed, though...
+        if (
+          displayedShows[0] &&
+          displayedShows[0].firstChild.textContent === show.value
+        ) {
+          // update selector display value
+          showSelector.selectedIndex = i;
+        }
+      }
     }
   }
 }
 
-// function to change the CSS display properties of an episode
+// function to change the CSS display properties of a show/an episode thumbnail
 function showHideThumbnail(thumbnail, bool) {
   if (bool === true) {
     if (thumbnail.style.display === "none") {
-      thumbnail.style.display = "initial";
+      thumbnail.style.display = "grid";
     }
   } else {
     thumbnail.style.display = "none";
