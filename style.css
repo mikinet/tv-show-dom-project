@@ -345,6 +345,11 @@ h4.title {
     grid-template-rows: 1fr 35% 65%;
   }
 
+  div.show div:last-child ul{
+    display: flex;
+    /* float:left; */
+  }
+
   /* 
   * Episodes
   */
@@ -353,11 +358,9 @@ h4.title {
   }
 
   div.episode {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 90%;
-    margin: 0 auto 1em;
+    width:90%;
+    justify-self:center;
+    display:initial;
   }
 }
 
