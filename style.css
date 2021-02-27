@@ -76,7 +76,7 @@ h4.title {
 }
 
 p.info {
-  margin-bottom: 1.5em;
+  margin: 1.5em auto;
 }
 
 p.result {
@@ -90,6 +90,10 @@ p.result {
 #btn-search {
   height: 2em;
   font-size: 1em;
+}
+
+.thumbnail * {
+  width: 100%;
 }
 
 .thumbnail {
@@ -260,10 +264,6 @@ h4.title {
   border-radius: 0.5125em 0.5125em 0 0;
 }
 
-.thumbnail * {
-  width: 100%;
-}
-
 /*
 * Media Queries
 */
@@ -279,7 +279,6 @@ h4.title {
 
   div.episode {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
   }
 
   div.episode .title {
@@ -304,7 +303,7 @@ h4.title {
   */
   div.show {
     margin: inherit auto;
-    grid-template-rows: 1fr 30% 70%;
+    grid-template-rows: auto auto 1fr;
   }
 
   div.show .title {
@@ -342,12 +341,6 @@ h4.title {
   */
   div.show {
     grid-template-columns: 30% 70%;
-    grid-template-rows: 1fr 35% 65%;
-  }
-
-  div.show div:last-child ul{
-    display: flex;
-    /* float:left; */
   }
 
   /* 
@@ -358,9 +351,9 @@ h4.title {
   }
 
   div.episode {
-    width:90%;
-    justify-self:center;
-    display:initial;
+    width: 90%;
+    justify-self: center;
+    display: initial;
   }
 }
 
@@ -394,9 +387,9 @@ h4.title {
 
   div.show div:last-child {
     grid-column: 3/4;
-    width: 80%;
+    width: 90%;
     justify-self: end;
-    padding-right: 1.5em;
+    padding-right: 1.2em;
   }
 
   div.show div:last-child ul {
@@ -405,13 +398,5 @@ h4.title {
 
   div.all-episodes {
     grid-template-columns: repeat(3, 33.33%);
-  }
-
-  .thumbnail {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 90%;
-    margin: 0 auto 1em;
   }
 }
