@@ -345,11 +345,6 @@ h4.title {
     grid-template-rows: 1fr 35% 65%;
   }
 
-  div.show div:last-child ul{
-    display: flex;
-    /* float:left; */
-  }
-
   /* 
   * Episodes
   */
