@@ -341,6 +341,7 @@ h4.title {
   */
   div.show {
     grid-template-columns: 30% 70%;
+    grid-template-rows: 1fr 35% 65%;
   }
 
   /* 
