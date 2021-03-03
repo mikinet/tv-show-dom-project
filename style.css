@@ -4,7 +4,6 @@
 
 body,
 div,
-form,
 select,
 input,
 button,
@@ -105,6 +104,23 @@ p.result {
   border: thin solid #ddd;
 }
 
+h4.title {
+  padding: 0.75rem;
+  background-color: teal;
+  border-bottom: thin solid #eee;
+  border-radius: 0.5125em 0.5125em 0 0;
+}
+
+h4.link,
+a.link,
+#btn-shows {
+  color: darkred;
+}
+
+a.link {
+  text-decoration: none;
+}
+
 .summary {
   font-size: 0.9em;
   color: #999;
@@ -115,7 +131,7 @@ p.result {
 /* 
 * Shows
 */
-form.shows {
+div.shows {
   display: grid;
   grid-template-columns: 90% 10%;
   grid-template-rows: auto auto auto;
@@ -139,11 +155,7 @@ div.show .title {
   grid-column: 1/3;
 }
 
-h4.link {
-  color: darkred;
-}
-
-h4.link:hover {
+div.show .link:hover {
   cursor: pointer;
 }
 
@@ -184,7 +196,7 @@ div.show .summary {
 /* 
 * Episodes
 */
-form.episodes {
+div.episodes {
   display: grid;
   grid-template-columns: 90% 10%;
   grid-template-rows: repeat(4, auto);
@@ -200,11 +212,14 @@ form.episodes {
   padding: 0.1em;
   border: 2px solid black;
   border-radius: 0.3em;
-  transform-style: preserve-3d;
+  transdiv-style: preserve-3d;
   background-color: azure;
   font-size: 1em;
-  color: darkred;
   text-align: center;
+}
+
+#btn-shows:hover {
+  cursor: pointer;
 }
 
 #episodes {
@@ -257,19 +272,12 @@ div.episode {
   grid-template-rows: repeat(3, auto);
 }
 
-h4.title {
-  padding: 0.75rem;
-  background-color: teal;
-  border-bottom: thin solid #eee;
-  border-radius: 0.5125em 0.5125em 0 0;
-}
-
 /*
 * Media Queries
 */
 
 @media screen and (min-width: 541px) and (max-width: 768px) {
-  form.flex-form {
+  div.flex-div {
     grid-template-columns: 92% 8%;
   }
 
@@ -332,7 +340,7 @@ h4.title {
     width: 90%;
   }
 
-  form.flex-form {
+  div.flex-div {
     grid-template-columns: 95% 5%;
   }
 
