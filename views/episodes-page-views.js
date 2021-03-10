@@ -21,8 +21,7 @@ const initialEpisodesContent = `
   <p class="result info"><span>Displaying</span>&nbsp;<span id="quantity"></span>/<span id="total"></span>&nbsp;episode(s)</p>
   <div class="all-episodes">`;
 
-const errorContent = `<p class="error"><span class="red">Error!</span><br>Sorry, cannot load the requested content.<br>Please try refreshing the page.</p>`;
-
+// this function creates episodes-related content to be displayed on the page
 function createEpisodesContent(data) {
   const contents = data.map((obj) => {
     const option = document.createElement("option");
@@ -48,6 +47,7 @@ function createEpisodesContent(data) {
   return contents;
 }
 
+// this function adds episodes-related content to the page
 function appendEpisodesItems(data, showsList, showId) {
   const selector1 = document.querySelector("#shows");
   const selector2 = document.querySelector("#episodes");
