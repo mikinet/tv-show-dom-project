@@ -1,12 +1,7 @@
-//You can edit ALL of the code here
+// SET INITIAL PAGE CONDITIONS FOR WHEN THE PAGE LOADS
 function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
-}
-
-function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+  // attempt to create the first shows page and its content, then
+  createShowsPage();
 }
 
 window.onload = setup;
