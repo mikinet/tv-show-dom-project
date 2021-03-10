@@ -1,3 +1,6 @@
+/**** GLOABAL VARIABLES/CONSTANTS ****/
+const showsApiFormat = "https://api.tvmaze.com/shows?page="; // TVMaze shows api link general format
+
 /**** FUNCTION DEFINITIONS ****/
 
 // CREATE A WHOLE NEW PAGE. THIS CODE RUNS DURING INITIAL PAGE SETUP

@@ -17,7 +17,6 @@ let lastPage = 0; // registers the last (right most) page that is selected (is o
 let currentPage = 0; // registers the current shows page that is selected (is on display)
 let startingPage = 1;
 // OTHERS
-const showsApiFormat = "http://api.tvmaze.com/shows?page="; // TVMaze shows api link general format
 const maxPagesToCreate = 10; // maximum allowable number of direct page links
 const no_img_link_s = // placeholder for missing show image
   `https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/488px-No-Image-Placeholder.svg.png`;
