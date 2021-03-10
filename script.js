@@ -1,7 +1,7 @@
-
+// SET INITIAL PAGE CONDITIONS FOR WHEN THE PAGE LOADS
 function setup() {
-  const allShows = getAllShows();
-  makePageForShows(allShows);
+  // attempt to create the first shows page and its content, then
+  createShowsPage();
 }
 
 window.onload = setup;
