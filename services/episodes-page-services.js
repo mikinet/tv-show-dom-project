@@ -11,7 +11,7 @@ function getAllEpisodes(showId, showsList) {
     // on successful response
     .then((data) => makePageForEpisodes(data, showsList, showId))
     // on failed response
-    .catch(() => createInitialContent("error"));
+    // .catch(() => createInitialContent("error"));
 }
 
 function makePageForEpisodes(episodesData, showsList, showId) {
