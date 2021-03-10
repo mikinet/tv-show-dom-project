@@ -1,4 +1,3 @@
-
 // content displayed if proper page loading fails
 const errorContent = `<p class="error"><span class="red">Error!</span><br>Sorry, cannot load the requested content.<br>Please try refreshing the page.</p>`;
 
