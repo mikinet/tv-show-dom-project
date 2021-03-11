@@ -58,6 +58,11 @@ body {
   background-color: #fcfcfc;
 }
 
+.link {
+  color: darkred;
+  cursor: pointer;
+}
+
 p.error {
   margin-top: 40vh;
   text-align: center;
@@ -109,12 +114,6 @@ h4.title {
   background-color: teal;
   border-bottom: thin solid #eee;
   border-radius: 0.5125em 0.5125em 0 0;
-}
-
-.link,
-#btn-shows {
-  color: darkred;
-  cursor: pointer;
 }
 
 a.link {
