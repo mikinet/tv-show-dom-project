@@ -12,13 +12,15 @@ const rightNavigators = [pageNavigators.nextPage, pageNavigators.skipRight];
 // COUNTERS
 let counter = 0; // temporarily stores the number of http requests made when creating direct page navigators
 let totalPages = 0; // registers the value of the highest direct page navigator on display
-let firstPage = 0; // registers the first (left most) page on display
-let lastPage = 0; // registers the last (right most) page that is selected (is on display)
-let currentPage = 0; // registers the current shows page that is selected (is on display)
-let startingPage = 1;
+let firstPage = null; // registers the first (left most) page on display
+let lastPage = null; // registers the last (right most) page that is selected (is on display)
+let activePage = null; // registers the current shows page that is selected (is on display)
+let startingPage = 1; // the page number where pagination starts when creating page navigators
+const pageOne = 1;
 // OTHERS
 const maxPagesToCreate = 10; // maximum allowable number of direct page links
-const no_img_link_s = // placeholder for missing show image
+const no_img_link_s =
+  // placeholder for missing show image
   `https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/488px-No-Image-Placeholder.svg.png`;
 
 // initial page html content to be displayed before rendering the fetched shows data
@@ -39,24 +41,27 @@ const initialShowsPageContent = `
 // this function creates html content that enables user to navigate through shows pages
 function createPagesNavigator(numPages) {
   const navigator = document.querySelector("#navigator"); // the navigators container
-  if (totalPages > maxPagesToCreate) {
-    // if the total number of pages is more than the amount set by "maxPagesToCreate"
-    navigator.innerHTML += leftNavigators[0]; // add the "<<" page navigator and...
-    navigator.innerHTML += leftNavigators[1]; // ...the "<" page navigator
-  }
-  // create direct page access "links"
+  let pagination = ``; // pagination container
+  // create pagination (direct page access "links")
   for (let i = 0; i < numPages; i++) {
     const pageNum = startingPage + i;
     const span = `<span id=page-${pageNum} class="link page-link" onclick="openPage(${pageNum})">${pageNum}</span>`;
-    navigator.innerHTML += span;
+    pagination += span;
   }
+  if (activePage) {
+    // if the active page number value is greater than 1
+    navigator.innerHTML += leftNavigators[0]; // add the "<<" page navigator and...
+    navigator.innerHTML += leftNavigators[1]; // ...the "<" page navigator
+  }
+  navigator.innerHTML += pagination;
   navigator.innerHTML += rightNavigators[0]; // add the ">" page navigator
   if (numPages === maxPagesToCreate) {
     // if numPages is more equal to amount set by "maxPagesToCreate", it means it is determined that...
     // there is at least one more show page that can be fetched from TVMaze.com
     navigator.innerHTML += rightNavigators[1]; // ...the ">>" page navigator and...
   }
-  updatePageTrackers(); // update the values of currentPage, firstPage and lastPage variables
+
+  updatePageTrackers(); // update the values of activePage, firstPage and lastPage variables
 }
 
 // this function removes unnecessary navigators, or resets the navigators container <div> element
@@ -64,12 +69,12 @@ function removeNavigators(which) {
   const navigator = document.querySelector("#navigator");
   switch (which) {
     case "L":
-      navigator[0].remove(); // ...remove the "<<" page navigator and...
-      navigator[0].remove(); // ...the "<" page navigator
+      navigator.firstElementChild.remove(); // ...remove the "<<" page navigator and...
+      navigator.firstElementChild.remove(); // ...the "<" page navigator
       break;
     case "R":
-      navigator[navigator.length - 1].remove(); // ...remove the ">>" page navigator and...
-      navigator[navigator.length - 1].remove(); // ...the ">" page navigator
+      navigator.lastElementChild.remove(); // ...remove the ">>" page navigator and...
+      navigator.lastElementChild.remove(); // ...the ">" page navigator
       break;
     default:
       if (navigator.innerHTML != "") {
