@@ -4,12 +4,18 @@ const showsApiFormat = "https://api.tvmaze.com/shows?page="; // TVMaze shows api
 /**** FUNCTION DEFINITIONS ****/
 
 // CREATE A WHOLE NEW PAGE. THIS CODE RUNS DURING INITIAL PAGE SETUP
-async function createShowsPage() {
-  const showData = await getShowsPageData();
+async function createShowsPage(pageNum = 1) {
+  // CHECK IF THIS FUNCTION WAS CALLED FROM 'EPISODES PAGE'
+  if (activePage) {
+    // if there was previously opened shows page (i.e. if createShowsPage was called from the "episodes page")
+    pageNum = parseInt(activePage.textContent); // set the value of pageNum to that page number
+  }
+  const showData = await getShowsPageData(pageNum);
   if (showData[0]) {
     createInitialContent("shows");
     const numPages = await checkForMorePages();
     if (numPages > 1) {
+      removeNavigators();
       createPagesNavigator(numPages);
     }
     makePageForShows(showData);
@@ -32,7 +38,6 @@ async function checkForMorePages(pageNum = 1) {
   if (status === "OK" && numPages < maxPagesToCreate) {
     // if status is OK and the maxPagesToCreate limit has not been exceeded
     counter++; // update counter
-    totalPages++;
     return checkForMorePages(nextPage); // check one more page
   }
   counter = 0;
@@ -58,20 +63,8 @@ function checkStatus(pageNum) {
 // THIS FUNCTION RUNS DURING INITIAL SHOWS PAGE CREATION OR WHENEVER PAGES ARE SKIPPED
 function updatePageTrackers() {
   const pages = document.querySelectorAll(".page-link");
-  currentPage = firstPage = pages[0];
+  activePage = firstPage = pages[0];
   lastPage = pages[pages.length - 1];
-}
-
-// THIS FUNCTION IS CALLED WHEN A USER CLICKS ON A DIRECT SHOW PAGE LINK
-async function openPage(pageNum) {
-  const showData = await getShowsPageData(pageNum);
-  if (showData) {
-    const pages = document.querySelectorAll(".page-link");
-    currentPage = document.getElementById(`page-${pageNum}`); // update currentPage
-    firstPage = pages[0];
-    lastPage = pages[pages.length - 1];
-    return makePageForShows(showData); // fill the page with contents
-  }
 }
 
 // this function runs every time the fetch api is called to fetch a show's page data
@@ -114,60 +107,73 @@ function extractShowsData(data) {
 function openPrevPage() {
   const pageNum = getPageNumber("P"); // previous page to open
   openPage(pageNum); // open the previous page
-  totalPages--;
-  startingPage = parseInt(firstPage.textContent) - 1;
-  removeNavigators();
-  createPagesNavigator(maxPagesToCreate);
-  if (currentPage === firstPage) {
-    // if the very beginning of show pages is reached, remove the unnecessary page navigators
-    shiftPages("R"); // shift pages to the right
+  if (activePage === firstPage) {
+    startingPage = parseInt(activePage.textContent) - 1;
+    removeNavigators();
+    createPagesNavigator(maxPagesToCreate);
+    // if the very last of show pages is reached, remove the unnecessary page navigators
+    shiftPages("R"); // shift pages to the left
   }
 }
 // this function runs when the ">" page navigator is clicked
 function openNextPage() {
   const pageNum = getPageNumber("N"); // next page to open
   openPage(pageNum); // open the next page
-  totalPages++;
-  startingPage = parseInt(firstPage.textContent) + 1;
-  removeNavigators();
-  createPagesNavigator(maxPagesToCreate);
-  if (currentPage === lastPage) {
+  // startingPage = parseInt(firstPage.textContent) + 1;
+  if (activePage === lastPage) {
+    startingPage = parseInt(firstPage.textContent) + 1;
+    removeNavigators();
+    createPagesNavigator(maxPagesToCreate);
     // if the very last of show pages is reached, remove the unnecessary page navigators
     shiftPages("L"); // shift pages to the left
+  }
+}
+
+// THIS FUNCTION IS CALLED WHEN A USER CLICKS ON A DIRECT SHOW PAGE "LINK"
+async function openPage(pageNum) {
+  const showData = await getShowsPageData(pageNum);
+  if (showData) {
+    const pages = document.querySelectorAll(".page-link");
+    activePage = document.getElementById(`page-${pageNum}`); // update activePage
+    firstPage = pages[0];
+    lastPage = pages[pages.length - 1];
+    return makePageForShows(showData); // fill the page with contents
   }
 }
 
 // this function runs when the "<<" page navigator is clicked. It enables skipping pages back by...
 // ...maxPagesToCreate number of pages (maximum)
 async function skipPagesBackward() {
-  const currentPageNum = parseInt(currentPage.textContent); // what page is being displayed?
-  let pageNum = currentPageNum - maxPagesToCreate; // determine the show page to fetch data for
-  // update counter
+  const activePageNum = parseInt(activePage.textContent); // what page is being displayed?
+  let pageNum = activePageNum - maxPagesToCreate; // determine the show page to fetch data for
   if (pageNum > 1) {
     // if that page is page-2 or any one of higher order
-    startingPage = totalPages = pageNum;
+    startingPage = pageNum; // set startingPage to the new number
   } else {
     // if skipping pages brings us back to page number 1
     pageNum = 1; // there is no page number that starts with a 0 or any negative value
-    // reset relevant counters
-    startingPage = 1;
-    totalPages = 0;
+    startingPage = 1; // reset startingPage
   }
   const showData = await getShowsPageData(pageNum); // check the status of the http request for json data
   if (showData[0]) {
-    removeNavigators();
+    // if there is usable json data
+    removeNavigators(); // reset the navigator container
     makePageForShows(showData);
-    const numPages = await checkForMorePages(pageNum);
-    createPagesNavigator(numPages);
+    const numPages = await checkForMorePages(pageNum); // prepare for setting the navigator container
+    createPagesNavigator(numPages); // set the navigator container
+  }
+  if (startingPage === 1) {
+    // if we came back to the beginning (shows page number 1);
+    removeNavigators("L");
   }
 }
 
 // this function runs when the ">>" page navigator is clicked. It enables skipping pages forward by...
 // ...maxPagesToCreate number of pages (maximum)
 async function skipPagesForward() {
-  const pageNum = totalPages + 1; // value of the last page on display
+  const pageNum = parseInt(activePage.textContent) + maxPagesToCreate; // value of the last page on display
   const showData = await getShowsPageData(pageNum); // check the status of the http request for json data
-  startingPage = totalPages + 1; // update startingPage
+  startingPage = pageNum; // update startingPage
   if (showData[0]) {
     removeNavigators();
     makePageForShows(showData);
@@ -178,29 +184,30 @@ async function skipPagesForward() {
 
 // this function returns the previous or next page number required to navigate to
 function getPageNumber(which) {
-  const currentPageNum = parseInt(currentPage.textContent);
+  const activePageNum = parseInt(activePage.textContent);
   if (which === "N") {
-    return currentPageNum + 1; // next page
+    return activePageNum + 1; // next page
   }
-  return currentPageNum - 1; // previous page
+  return activePageNum - 1; // previous page
 }
 
-// this function is called when the current page on display is on either end of the navigation display
+// this function is called when the active page on display is on either end of the navigation display
 async function shiftPages(direction) {
-  const currentPageNum = parseInt(currentPage.textContent);
-  // if the current page on display is the right most one...
+  const activePageNum = parseInt(activePage.textContent);
   if (direction === "L") {
-    // if shift direction is to the left and...
-    const notLastPage = await checkStatus(currentPageNum + 1); // check if there is more page on TVMaze.com
+    // if pages are to be shifted to the right
+    const notLastPage = await checkStatus(activePageNum + 1); // check if there is more page on TVMaze.com
     if (!notLastPage) {
-      // if there is no more shows page on TVMaze.com
-      removeNavigators("R"); //remove the right side navigators (">", and ">>")
+      // if not, remove the right side navigators (">", and ">>")
+      removeNavigators("R");
     }
-  }
-  // if shift direction is to the right and...
-  if (currentPageNum === 2) {
-    // if the currentPage is page-2
-    removeNavigators("L"); //remove the left side navigators ("<<", and "<")
+    return;
+  } else {
+    // if pages are to be shifted to the left and...
+    if (activePageNum === 1) {
+      // if the very beginning of show pages is reached, remove the unnecessary page navigators
+      removeNavigators("L");
+    }
   }
 }
 
@@ -218,6 +225,7 @@ function selectShow(e) {
   else {
     selectedShow = id;
   }
+  startingPage = parseInt(firstPage.textContent);
   getAllEpisodes(selectedShow, showsList); // fetch all episodes data for a selected show
 }
 

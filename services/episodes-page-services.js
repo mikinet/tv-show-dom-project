@@ -46,10 +46,10 @@ function extractEpisodesData(data) {
 
 // this event handler enables user navigation back to "shows" page
 const openShowsPage = function () {
-  createShowsPage();
+  createShowsPage();  // use passivePageNum value 
 };
 
-// // a function to manage selection of an episode from list
+// a function to manage selection of an episode from list
 function selectEpisode(event) {
   const title = event.target.value;
   const allThumbnails = document.querySelectorAll(".thumbnail"); // all episode thumbnails
